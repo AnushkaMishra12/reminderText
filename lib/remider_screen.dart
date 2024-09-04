@@ -1,17 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:reminder/reminder_database.dart';
 import 'package:reminder/reminder_model.dart';
-import 'notification_helper.dart';
+
+import 'notifi_service.dart';
 
 class ReminderScreen extends StatefulWidget {
   const ReminderScreen({super.key});
 
   @override
-  _ReminderScreenState createState() => _ReminderScreenState();
+  ReminderScreenState createState() => ReminderScreenState();
 }
 
-class _ReminderScreenState extends State<ReminderScreen> {
+class ReminderScreenState extends State<ReminderScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   DateTime selectedDateTime = DateTime.now();
@@ -35,66 +37,85 @@ class _ReminderScreenState extends State<ReminderScreen> {
               decoration: const InputDecoration(labelText: 'Description'),
             ),
             const SizedBox(height: 16),
+            Text("Schedule Time: ${selectedDateTime.toString()}"),
+            const SizedBox(height: 16),
+            DatePickerTxt(
+              callback: (dateTime) {
+                setState(() {
+                  selectedDateTime = dateTime;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2100),
-                );
+                final title = titleController.text.trim();
+                final description = descriptionController.text.trim();
 
-                if (pickedDate != null) {
-                  TimeOfDay? pickedTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
+                if (title.isNotEmpty && description.isNotEmpty) {
+                  final reminder = Reminder(
+                    title: title,
+                    description: description,
+                    dateTime: selectedDateTime,
                   );
 
-                  if (pickedTime != null) {
-                    setState(() {
-                      selectedDateTime = DateTime(
-                        pickedDate.year,
-                        pickedDate.month,
-                        pickedDate.day,
-                        pickedTime.hour,
-                        pickedTime.minute,
-                      );
-                    });
+                  final dbHelper = ReminderDatabaseHelper();
+                  final reminderId = await dbHelper.insertReminder(reminder);
+                  reminder.id = reminderId;
 
-                    final title = titleController.text.trim();
-                    final description = descriptionController.text.trim();
-
-                    if (title.isNotEmpty && description.isNotEmpty) {
-                      final reminder = Reminder(
-                        title: title,
-                        description: description,
-                        dateTime: selectedDateTime,
-                      );
-
-                      final dbHelper = ReminderDatabaseHelper();
-                      final reminderId =
-                          await dbHelper.insertReminder(reminder);
-                      reminder.id = reminderId;
-
-                      await NotificationHelper.scheduleNotification(reminder);
-                    } else {
-                      if (kDebugMode) {
-                        print('Reminder title or description is empty.');
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text('Title and description cannot be empty.'),
-                        ),
-                      );
-                    }
+                  NotificationService.scheduleNotification(
+                      id: reminder.id ?? DateTime.now().microsecond,
+                      title: reminder.title,
+                      body: reminder.description,
+                      scheduledNotificationDateTime: reminder.dateTime);
+                } else {
+                  if (kDebugMode) {
+                    print('Reminder title or description is empty.');
                   }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Title and description cannot be empty.'),
+                    ),
+                  );
                 }
               },
               child: const Text('Add Reminder'),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DatePickerTxt extends StatefulWidget {
+  const DatePickerTxt({
+    super.key,
+    required this.callback,
+  });
+
+  final Function(DateTime) callback;
+
+  @override
+  State<DatePickerTxt> createState() => _DatePickerTxtState();
+}
+
+class _DatePickerTxtState extends State<DatePickerTxt> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        DatePicker.showDateTimePicker(
+          context,
+          minTime: DateTime.now().add(const Duration(minutes: 1)),
+          showTitleActions: true,
+          onChanged: (date) => widget.callback(date),
+          onConfirm: (date) {},
+        );
+      },
+      child: const Text(
+        'Select Date Time',
+        style: TextStyle(color: Colors.blue),
       ),
     );
   }

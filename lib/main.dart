@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:reminder/remider_screen.dart';
 import 'package:reminder/work_manager.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:workmanager/workmanager.dart';
-import 'notification_helper.dart';
+
+import 'notifi_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationHelper.initialize();
-  await NotificationHelper.createNotificationChannel();
+  // Initialize notification service
+  NotificationService.initNotification();
+
+  // Initialize WorkManager
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  tz.initializeTimeZones();
+
   runApp(const MyApp());
 }
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: ReminderScreen(),
     );
   }
