@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
-import 'model.dart';
+import '../view/model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();

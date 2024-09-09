@@ -1,5 +1,5 @@
 import 'package:path/path.dart';
-import 'package:reminder/reminder_model.dart';
+import 'package:reminder/view/reminder_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ReminderDatabaseHelper {

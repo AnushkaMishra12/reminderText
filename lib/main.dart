@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:reminder/repo/database_helper.dart';
+import 'package:reminder/manager/work_manager.dart';
+import 'package:reminder/route/app_page.dart';
+import 'package:reminder/route/app_route.dart';
+import 'package:reminder/screen/doughnut_graph.dart';
+import 'package:reminder/service/notification_service.dart';
+import 'package:reminder/theme/app_theme.dart';
 import 'package:workmanager/workmanager.dart';
-import 'db/database_helper.dart';
-import 'db/noti_service.dart';
-import 'db/work_manager.dart';
-import 'graph_habbit/doughnut_graph.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +24,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DoughnutGraph(),
+      title: 'Flutter Demo',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: MediaQuery.of(context).platformBrightness == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light,
+      initialRoute: AppRoutes.dash,
+      getPages: AppPages.pages,
     );
   }
 }

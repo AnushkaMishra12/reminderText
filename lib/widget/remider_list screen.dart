@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reminder/reminder_database.dart';
-import 'package:reminder/reminder_model.dart';
+import 'package:reminder/repo/reminder_database.dart';
+import 'package:reminder/view/reminder_model.dart';
 
 class ReminderListScreen extends StatefulWidget {
   const ReminderListScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../db/model.dart';
+import '../view/model.dart';
 
 class HabitListItem extends StatelessWidget {
   final Habit habit;

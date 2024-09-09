@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminder/graph_habbit/week_days.dart';
+import 'package:reminder/widget/week_days.dart';
 import 'month_calender.dart';
 
 class CalendarScreen extends StatelessWidget {

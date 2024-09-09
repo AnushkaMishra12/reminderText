@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'db/database_helper.dart';
-import 'db/noti_service.dart';
-import 'graph_habbit/at_least.dart';
-import 'graph_habbit/category_text.dart';
-import 'graph_habbit/doughnut_graph.dart';
-import 'graph_habbit/extragoals.dart';
-import 'graph_habbit/time_picker.dart';
+import 'package:reminder/repo/database_helper.dart';
+import '../service/notification_service.dart';
+import '../widget/at_least.dart';
+import '../widget/category_text.dart';
+import 'doughnut_graph.dart';
+import '../widget/extragoals.dart';
+import '../widget/time_picker.dart';
+
 
 class DefineHabitPage extends StatefulWidget {
   const DefineHabitPage({super.key});

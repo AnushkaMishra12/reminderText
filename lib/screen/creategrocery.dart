@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'graph_habbit/createController.dart';
+import 'createController.dart';
 
 class CreateGroceryListScreen extends StatelessWidget {
   const CreateGroceryListScreen({super.key});

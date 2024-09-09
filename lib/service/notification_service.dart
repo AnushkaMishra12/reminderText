@@ -33,14 +33,20 @@ class NotificationService {
     });
   }
 
-  static Future<void> showNotification(
-      {int id = 0, String? name, String? description, String? payload}) async {
+  static Future<void> showNotification({
+    int id = 0,
+    String? name,
+    String? title,
+    String? description,
+    String? body,
+    String? payload,
+  }) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
         channelKey: 'basic_channel',
-        title: name,
-        body: description,
+        title: title ?? name,
+        body: body ?? description,
         payload: {'payload': payload ?? ''},
       ),
     );
@@ -49,18 +55,22 @@ class NotificationService {
   static Future<void> scheduleNotification({
     int id = 0,
     String? name,
+    String? title,
     String? description,
+    String? body,
     String? payload,
     required DateTime scheduledNotificationDateTime,
   }) async {
-    print('Scheduling notification at $scheduledNotificationDateTime');
+    if (kDebugMode) {
+      print('Scheduling notification at $scheduledNotificationDateTime');
+    }
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
         channelKey: 'basic_channel',
-        title: name,
-        body: description,
+        title: title ?? name,
+        body: body ?? description,
         payload: {'payload': payload ?? ''},
       ),
       schedule: NotificationCalendar.fromDate(
@@ -70,6 +80,7 @@ class NotificationService {
       ),
     );
   }
+
   static void testNotification() async {
     if (kDebugMode) {
       print('Attempting to send test notification...');
@@ -86,6 +97,7 @@ class NotificationService {
       print('Test notification sent.');
     }
   }
+
   static Future<void> cancelNotification(int id) async {
     await AwesomeNotifications().cancel(id);
   }

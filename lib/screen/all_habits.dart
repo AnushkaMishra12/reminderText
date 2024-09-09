@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../db/database_helper.dart';
-import '../db/model.dart';
-import '../graph_habbit/habbit_list.dart';
+import '../repo/database_helper.dart';
+import '../view/model.dart';
+import '../widget/habbit_list.dart';
 
 class AllHabitsScreen extends StatefulWidget {
   const AllHabitsScreen({super.key});
