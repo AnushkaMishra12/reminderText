@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:reminder/remider_screen.dart';
-import 'package:reminder/work_manager.dart';
 import 'package:workmanager/workmanager.dart';
+import 'db/database_helper.dart';
+import 'db/noti_service.dart';
+import 'db/work_manager.dart';
+import 'graph_habbit/doughnut_graph.dart';
 
-import 'notifi_service.dart';
-
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize notification service
-  NotificationService.initNotification();
-
-  // Initialize WorkManager
+  final dbHelper = DatabaseHelper();
+  await dbHelper.database;
+  await dbHelper.printTableStructure('habits');
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-
+  NotificationService.initNotification();
   runApp(const MyApp());
 }
 
@@ -22,7 +21,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: ReminderScreen(),
+      debugShowCheckedModeBanner: false,
+      home: DoughnutGraph(),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class NotificationService {
@@ -33,39 +34,58 @@ class NotificationService {
   }
 
   static Future<void> showNotification(
-      {int id = 0, String? title, String? body, String? payload}) async {
+      {int id = 0, String? name, String? description, String? payload}) async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
         channelKey: 'basic_channel',
-        title: title,
-        body: body,
+        title: name,
+        body: description,
         payload: {'payload': payload ?? ''},
       ),
     );
   }
 
-  static Future<void> scheduleNotification(
-      {int id = 0,
-      String? title,
-      String? body,
-      String? payload,
-      required DateTime scheduledNotificationDateTime}) async {
+  static Future<void> scheduleNotification({
+    int id = 0,
+    String? name,
+    String? description,
+    String? payload,
+    required DateTime scheduledNotificationDateTime,
+  }) async {
+    print('Scheduling notification at $scheduledNotificationDateTime');
+
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
         channelKey: 'basic_channel',
-        title: title,
-        body: body,
+        title: name,
+        body: description,
         payload: {'payload': payload ?? ''},
       ),
       schedule: NotificationCalendar.fromDate(
-          date: scheduledNotificationDateTime,
-          allowWhileIdle: true,
-          preciseAlarm: true),
+        date: scheduledNotificationDateTime,
+        allowWhileIdle: true,
+        preciseAlarm: true,
+      ),
     );
   }
-
+  static void testNotification() async {
+    if (kDebugMode) {
+      print('Attempting to send test notification...');
+    }
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: 'basic_channel',
+        title: 'Test Notification',
+        body: 'This is a test notification.',
+      ),
+    );
+    if (kDebugMode) {
+      print('Test notification sent.');
+    }
+  }
   static Future<void> cancelNotification(int id) async {
     await AwesomeNotifications().cancel(id);
   }

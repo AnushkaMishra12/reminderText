@@ -6,9 +6,7 @@ class ReminderDatabaseHelper {
   static final ReminderDatabaseHelper _instance =
       ReminderDatabaseHelper._internal();
   static Database? _database;
-
   ReminderDatabaseHelper._internal();
-
   factory ReminderDatabaseHelper() {
     return _instance;
   }
@@ -23,7 +21,7 @@ class ReminderDatabaseHelper {
     String path = join(await getDatabasesPath(), 'reminder.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 3,
       onCreate: _onCreate,
     );
   }
@@ -41,7 +39,6 @@ class ReminderDatabaseHelper {
 
   Future<int> insertReminder(Reminder reminder) async {
     final db = await database;
-
     return await db.insert('reminders', reminder.toMap());
   }
 

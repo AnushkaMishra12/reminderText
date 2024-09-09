@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:reminder/remider_list%20screen.dart';
 import 'package:reminder/reminder_database.dart';
 import 'package:reminder/reminder_model.dart';
-
 import 'notifi_service.dart';
 
 class ReminderScreen extends StatefulWidget {
@@ -16,7 +14,7 @@ class ReminderScreen extends StatefulWidget {
 class ReminderScreenState extends State<ReminderScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  DateTime selectedDateTime = DateTime.now();
+  DateTime? selectedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -37,28 +35,25 @@ class ReminderScreenState extends State<ReminderScreen> {
               decoration: const InputDecoration(labelText: 'Description'),
             ),
             const SizedBox(height: 16),
-            Text("Schedule Time: ${selectedDateTime.toString()}"),
-            const SizedBox(height: 16),
-            DatePickerTxt(
+            CustomTimePicker(
               callback: (dateTime) {
                 setState(() {
-                  selectedDateTime = dateTime;
+                  selectedTime = dateTime;
                 });
               },
+              selectedTime: selectedTime,
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
                 final title = titleController.text.trim();
                 final description = descriptionController.text.trim();
-
-                if (title.isNotEmpty && description.isNotEmpty) {
+                if (title.isNotEmpty && description.isNotEmpty && selectedTime != null) {
                   final reminder = Reminder(
                     title: title,
                     description: description,
-                    dateTime: selectedDateTime,
+                    dateTime: selectedTime!,
                   );
-
                   final dbHelper = ReminderDatabaseHelper();
                   final reminderId = await dbHelper.insertReminder(reminder);
                   reminder.id = reminderId;
@@ -68,13 +63,17 @@ class ReminderScreenState extends State<ReminderScreen> {
                       title: reminder.title,
                       body: reminder.description,
                       scheduledNotificationDateTime: reminder.dateTime);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReminderListScreen(),
+                    ),
+                  );
                 } else {
-                  if (kDebugMode) {
-                    print('Reminder title or description is empty.');
-                  }
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Title and description cannot be empty.'),
+                      content: Text('Title, description, and time cannot be empty.'),
                     ),
                   );
                 }
@@ -88,34 +87,37 @@ class ReminderScreenState extends State<ReminderScreen> {
   }
 }
 
-class DatePickerTxt extends StatefulWidget {
-  const DatePickerTxt({
-    super.key,
-    required this.callback,
-  });
-
+class CustomTimePicker extends StatelessWidget {
   final Function(DateTime) callback;
+  final DateTime? selectedTime;
+  const CustomTimePicker({super.key, required this.callback, this.selectedTime});
 
-  @override
-  State<DatePickerTxt> createState() => _DatePickerTxtState();
-}
-
-class _DatePickerTxtState extends State<DatePickerTxt> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        DatePicker.showDateTimePicker(
-          context,
-          minTime: DateTime.now().add(const Duration(minutes: 1)),
-          showTitleActions: true,
-          onChanged: (date) => widget.callback(date),
-          onConfirm: (date) {},
+      onPressed: () async {
+        final TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
         );
+
+        if (pickedTime != null) {
+          final now = DateTime.now();
+          final selectedDateTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          callback(selectedDateTime);
+        }
       },
-      child: const Text(
-        'Select Date Time',
-        style: TextStyle(color: Colors.blue),
+      child: Text(
+        selectedTime != null
+            ? 'Selected Time: ${selectedTime!.hour}:${selectedTime!.minute}'
+            : 'Select Time',
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }
