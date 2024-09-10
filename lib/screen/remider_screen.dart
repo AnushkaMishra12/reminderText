@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:reminder/widget/remider_list%20screen.dart';
 import 'package:reminder/repo/reminder_database.dart';
 import 'package:reminder/view/reminder_model.dart';
-
 import '../service/notification_service.dart';
 
 class ReminderScreen extends StatefulWidget {

@@ -38,7 +38,7 @@ class _AllHabitsScreenState extends State<AllHabitsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: const Text("All Habits"),

@@ -70,7 +70,7 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -112,6 +112,15 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
                 )
                     : Column(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: const Align(
+                          alignment: Alignment.centerLeft
+                          ,child: Text('Day Highlight' ,style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 18),)),
+                    ),
                     Center(
                       child: Container(
                         margin: const EdgeInsets.all(10),
@@ -214,8 +223,8 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
                         } else {
                           final limitedHabits = snapshot.data!.take(3).toList();
                           return ListView.builder(
-                            shrinkWrap: true, // Added this line
-                            physics: const NeverScrollableScrollPhysics(), // Disable ListView scrolling
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: limitedHabits.length,
                             itemBuilder: (context, index) {
                               final habit = limitedHabits[index];

@@ -12,7 +12,7 @@ class WeekDaysWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     DateTime now = DateTime.now();
     List<Widget> days = [];
     for (int i = 0; i < 7; i++) {

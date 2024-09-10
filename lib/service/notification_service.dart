@@ -32,7 +32,6 @@ class NotificationService {
       }
     });
   }
-
   static Future<void> showNotification({
     int id = 0,
     String? name,
