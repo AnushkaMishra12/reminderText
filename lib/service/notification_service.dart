@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NotificationService {
   static void initNotification() {
@@ -15,6 +16,10 @@ class NotificationService {
           ledColor: Colors.white,
           criticalAlerts: true,
           importance: NotificationImportance.High,
+          enableVibration: true,
+          defaultRingtoneType: DefaultRingtoneType.Notification,
+          enableLights: true,
+          defaultPrivacy: NotificationPrivacy.Public,
         ),
       ],
     );
@@ -28,9 +33,32 @@ class NotificationService {
           NotificationPermission.Vibration,
           NotificationPermission.Light,
           NotificationPermission.PreciseAlarms,
+          NotificationPermission.FullScreenIntent,
         ]);
       }
     });
+
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: (receivedNotification) async {
+        final String actualTime = DateFormat('yyyy-MM-dd – kk:mm:ss').format(DateTime.now());
+        if (kDebugMode) {
+          print("Notification Action Received at: $actualTime");
+          print("Notification payload: ${receivedNotification.payload}");
+        }
+      },
+      onNotificationDisplayedMethod: (receivedNotification) async {
+        final String displayTime = DateFormat('yyyy-MM-dd – kk:mm:ss').format(DateTime.now());
+        if (kDebugMode) {
+          print("Notification displayed at: $displayTime");
+        }
+      },
+      onDismissActionReceivedMethod: (receivedNotification) async {
+        final String dismissTime = DateFormat('yyyy-MM-dd – kk:mm:ss').format(DateTime.now());
+        if (kDebugMode) {
+          print("Notification dismissed at: $dismissTime");
+        }
+      },
+    );
   }
   static Future<void> showNotification({
     int id = 0,
@@ -60,8 +88,10 @@ class NotificationService {
     String? payload,
     required DateTime scheduledNotificationDateTime,
   }) async {
+    final String scheduledTime = DateFormat('yyyy-MM-dd – kk:mm:ss').format(scheduledNotificationDateTime);
+
     if (kDebugMode) {
-      print('Scheduling notification at $scheduledNotificationDateTime');
+      print('Scheduling notification for: $scheduledTime');
     }
 
     await AwesomeNotifications().createNotification(
@@ -81,20 +111,21 @@ class NotificationService {
   }
 
   static void testNotification() async {
+    final String actualTime = DateFormat('yyyy-MM-dd – kk:mm:ss').format(DateTime.now());
+
     if (kDebugMode) {
-      print('Attempting to send test notification...');
+      print('Attempting to send test notification at: $actualTime');
     }
+
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
         channelKey: 'basic_channel',
         title: 'Test Notification',
         body: 'This is a test notification.',
+        notificationLayout: NotificationLayout.Default,
       ),
     );
-    if (kDebugMode) {
-      print('Test notification sent.');
-    }
   }
 
   static Future<void> cancelNotification(int id) async {

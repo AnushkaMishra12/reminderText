@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,7 +41,9 @@ class _TimePickerFieldState extends State<TimePickerField> {
     try {
       return formatter.format(dateTime);
     } catch (e) {
-      print('Error formatting time: $e');
+      if (kDebugMode) {
+        print('Error formatting time: $e');
+      }
       return '';
     }
   }

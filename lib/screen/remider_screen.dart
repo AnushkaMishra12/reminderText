@@ -17,7 +17,7 @@ class ReminderScreenState extends State<ReminderScreen> {
   DateTime? selectedTime;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Reminder'),

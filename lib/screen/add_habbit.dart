@@ -147,7 +147,7 @@ class _DefineHabitPageState extends State<DefineHabitPage> {
 
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const DoughnutGraph(),
+              builder: (context) => DoughnutGraph(),
             ),
           );
         }

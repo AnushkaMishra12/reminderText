@@ -11,6 +11,8 @@ class CategoryTextField extends StatelessWidget {
     required this.categoryColor,
     required this.onColorChanged,
     required this.controller,
+
+
   });
 
   void _openColorPicker(BuildContext context) {

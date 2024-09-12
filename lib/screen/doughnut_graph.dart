@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../widget/category_bottom_sheet.dart';
 import 'add_habbit.dart';
 import '../repo/database_helper.dart';
 import '../view/model.dart';
@@ -7,6 +9,7 @@ import '../widget/custom_doughnut_indicator.dart';
 import '../widget/habbit_list.dart';
 import '../widget/month_calender.dart';
 import '../widget/week_days.dart';
+import 'dashboard/doghnutComntroller.dart';
 
 class DoughnutGraph extends StatefulWidget {
   const DoughnutGraph({super.key});
@@ -20,6 +23,7 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
   final DateTime _today = DateTime.now();
   final ValueNotifier<DateTime> _selectedMonth = ValueNotifier(DateTime.now());
   late Future<List<Habit>> _habitsFuture;
+  final DoughnutGraphController controller = Get.put(DoughnutGraphController());
 
   @override
   void initState() {
@@ -69,8 +73,23 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
     );
   }
 
+  void _openBottomSheetForAll(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return CategoryBottomSheet(
+          categoryData: controller.categoryData.value,
+          onSave: (updatedData) {
+            controller.updateAllCategories(updatedData);
+          },
+        );
+      },
+    );
+  }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -114,77 +133,65 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(10),
-                      child: const Align(
-                          alignment: Alignment.centerLeft
-                          ,child: Text('Day Highlight' ,style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 18),)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Day Highlight',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18)),
+                          GestureDetector(
+                            onTap: () => _openBottomSheetForAll(context),
+                            child: const Text('Give all >',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 18)),
+                          ),
+                        ],
+                      ),
                     ),
                     Center(
                       child: Container(
                         margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20)),
                         ),
                       ),
                     ),
-                    const Center(
-                      child: Wrap(
-                        spacing: -15,
-                        runSpacing: -25,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          CustomDoughnutIndicator(
-                            label: "Water",
-                            badPercentage: 2,
-                            goodPercentage: 18,
-                            excellentPercentage: 50,
-                            averagePercentage: 30,
-                          ),
-                          CustomDoughnutIndicator(
-                            label: "Sleep",
-                            badPercentage: 10,
-                            goodPercentage: 30,
-                            excellentPercentage: 40,
-                            averagePercentage: 20,
-                          ),
-                          CustomDoughnutIndicator(
-                            label: "Walk",
-                            badPercentage: 5,
-                            goodPercentage: 45,
-                            excellentPercentage: 30,
-                            averagePercentage: 20,
-                          ),
-                          CustomDoughnutIndicator(
-                            label: "Study",
-                            badPercentage: 15,
-                            goodPercentage: 25,
-                            excellentPercentage: 40,
-                            averagePercentage: 20,
-                          ),
-                          CustomDoughnutIndicator(
-                            label: "Bills",
-                            badPercentage: 20,
-                            goodPercentage: 20,
-                            excellentPercentage: 50,
-                            averagePercentage: 10,
-                          ),
-                        ],
-                      ),
-                    ),
+                    Center(
+                        child: Obx(() {
+                          return Wrap(
+                            spacing: -15,
+                            runSpacing: -25,
+                            alignment: WrapAlignment.center,
+                            children: controller.categoryData.value.keys.map((category) {
+                              final data = controller.categoryData.value[category]!;
+                              return GestureDetector(
+                                onTap: () {},
+                                child: CustomDoughnutIndicator(
+                                  label: category,
+                                  badPercentage: data["Bad"]!,
+                                  goodPercentage: data["Good"]!,
+                                  excellentPercentage: data["Excellent"]!,
+                                  averagePercentage: data["Average"]!,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        })),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Today",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 18),
-                          ),
+                          const Text('See all >',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18)),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -195,13 +202,11 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
                                 ),
                               );
                             },
-                            child: const Text(
-                              "See All >",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: const Text('See all >',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 18)),
                           ),
                         ],
                       ),

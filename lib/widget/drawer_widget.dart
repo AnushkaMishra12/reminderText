@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screen/calculator_screen.dart';
+
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
@@ -38,6 +40,10 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Calculator'),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CalculatorScreen()),
+              );
             },
           ),
           ListTile(
