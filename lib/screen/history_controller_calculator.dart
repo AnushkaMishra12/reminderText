@@ -29,7 +29,6 @@ class HistoryController extends GetxController {
 
 class HistoryScreen extends StatelessWidget {
   HistoryScreen({super.key});
-
   final HistoryController _controller = Get.put(HistoryController());
 
   @override

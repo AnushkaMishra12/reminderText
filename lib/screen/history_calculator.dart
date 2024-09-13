@@ -23,7 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     try {
       await _dbHelper.clearAllHistory();
       setState(() {
-        _historyFuture = _dbHelper.getCalculatorHistory(); // Refresh the Future
+        _historyFuture = _dbHelper.getCalculatorHistory();
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('All history cleared')),

@@ -10,9 +10,9 @@ class CalculatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white60,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black12,
+        backgroundColor: Colors.white,
         title: const Text('Calculator',style: TextStyle(color: Colors.black),),
         actions: [
           IconButton(
@@ -26,30 +26,48 @@ class CalculatorScreen extends StatelessWidget {
         child: Column(
           children: [
             Obx(() => Container(
-              padding: const EdgeInsets.all(10),
-            decoration:const BoxDecoration(color: Colors.white60,borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: TextField(
-                controller: TextEditingController(text: _controller.expression.value),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Enter expression',
-                ),
-                readOnly: true,
+            decoration:const BoxDecoration(color: Colors.lightBlueAccent,borderRadius: BorderRadius.all
+              (Radius.circular(10))),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(fontSize: 44,color: Colors.black,fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.end,
+                      controller: TextEditingController(text: _controller.expression.value),
+                      decoration: const InputDecoration(
+
+                      border: InputBorder.none,
+
+                        hintText: 'Enter expression',
+                       hintStyle: TextStyle(fontSize: 24)
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                    Container(color: Colors.black45,width: double.infinity,height: 1),
+                   Padding(
+                     padding: const EdgeInsets.all(20.0),
+                     child: Align(
+                       alignment: Alignment.centerRight,
+                       child: Text(
+                        _controller.result.value,
+                        style: const TextStyle(fontSize: 34,color: Colors.red,fontWeight: FontWeight.bold),
+                                         ),
+                     ),
+                   ),
+                ],
               ),
             )),
-            Obx(() => Container(
-              margin: const EdgeInsets.all(10),
-              child: Text(
-                _controller.result.value,
-                style: const TextStyle(fontSize: 24,color: Colors.red,fontWeight: FontWeight.bold),
-              ),
-            )),
+            const SizedBox(height: 30,),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
+                  crossAxisSpacing: 7.0,
+                  mainAxisSpacing: 7.0,
                 ),
                 itemCount: 21,
                 itemBuilder: (context, index) {
@@ -80,22 +98,24 @@ class CalculatorScreen extends StatelessWidget {
                       return _buildButton('9', () => _controller.appendNumber('9'));
                     case 12:
                       return _buildButton('*', () => _controller.appendOperator('*'), isOperator: true);
-                    case 13:
-                      return _buildButton('(', () => _controller.appendBracket('('), isOperator: true);
+                    case 13:return Obx(() => _buildButton(
+                          _controller.isNextOpenParenthesis.value ? '(' : ')',
+                          _controller.appendParenthesis,
+                          isOperator: true
+                    ));
                     case 14:
                       return _buildButton('0', () => _controller.appendNumber('0'));
                     case 15:
                       return _buildButton('.', _controller.appendDecimal);
                     case 16:
-                      return _buildButton(')', () => _controller.appendBracket(')'), isOperator: true);
+                      return _buildButton('%', () => _controller.appendPercentage('%'), isOperator: true);
                     case 17:
                       return _buildButton('/', () => _controller.appendOperator('/'), isOperator: true);
                     case 18:
-                      return _buildButton('√', () => _controller.appendOperator('√'), isOperator: true);
-                    case 19:
                       return _buildButton('del', _controller.deleteLast, isOperator: true);
-                    case 20:
+                    case 19:
                       return _buildButton('=', _controller.calculate, isOperator: true); // Equals button
+
                     default:
                       return Container();
                   }
@@ -112,15 +132,15 @@ class CalculatorScreen extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: isOperator ? Colors.lightBlueAccent : Colors.grey[300],
+        backgroundColor: isOperator ? Colors.indigo : Colors.cyanAccent,
         foregroundColor: isOperator ? Colors.white : Colors.black,
         iconColor: Colors.black,
-        minimumSize: const Size(60, 60),
+        minimumSize: const Size(80, 80),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
       ),
-      child: Text(text, style: const TextStyle(fontSize: 18)),
+      child: Text(text, style: const TextStyle(fontSize: 24)),
     );
   }
 }

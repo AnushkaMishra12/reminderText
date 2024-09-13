@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:expressions/expressions.dart';
-import 'dart:math';
 import '../../repo/db_calculator.dart';
 
 class CalculatorController extends GetxController {
   var expression = ''.obs;
   var result = ''.obs;
-
+  RxBool isNextOpenParenthesis = true.obs;
   void appendNumber(String number) {
     expression.value += number;
   }
@@ -16,20 +15,47 @@ class CalculatorController extends GetxController {
     final lastChar = expression.value.isNotEmpty
         ? expression.value.trim().substring(expression.value.trim().length - 1)
         : '';
-    if (lastChar.isNotEmpty && !['+', '-', '*', '/', '(', '√'].contains(lastChar)) {
+    if (lastChar.isNotEmpty && !['+', '-', '*', '/', '('].contains(lastChar)) {
       expression.value += ' $operator ';
     }
   }
+  void appendPercentage(String operator) {
+    if (operator == '%') {
+      if (expression.isNotEmpty) {
+        String currentExpression = expression.value;
 
-  void appendBracket(String bracket) {
-    final lastChar = expression.value.isNotEmpty
-        ? expression.value.trim().substring(expression.value.trim().length - 1)
-        : '';
-    if (bracket == '(') {
-      expression.value += bracket;
-    } else if (bracket == ')' && lastChar != '(' && !['+', '-', '*', '/', '√'].contains(lastChar)) {
-      expression.value += bracket;
+        RegExp regExp = RegExp(r'[\+\-\*\/]');
+        Iterable<RegExpMatch> matches = regExp.allMatches(currentExpression);
+
+        if (matches.isNotEmpty) {
+          RegExpMatch lastMatch = matches.last;
+
+          String leftSide = currentExpression.substring(0, lastMatch.start);
+          String operator = currentExpression[lastMatch.start];
+          String rightSide = currentExpression.substring(lastMatch.start + 1);
+          double leftValue = double.tryParse(leftSide) ?? 0;
+          double rightValue = double.tryParse(rightSide) ?? 0;
+          double percentageResult = (leftValue * rightValue) / 100;
+
+
+          expression.value = leftValue.toString() + operator + percentageResult.toString();
+        } else {
+          double currentValue = double.tryParse(currentExpression) ?? 0;
+          expression.value = (currentValue / 100).toString();
+        }
+      }
+    } else {
+      expression.value += operator;
     }
+  }
+
+  void appendParenthesis() {
+    if (isNextOpenParenthesis.value) {
+      expression.value += '(';
+    } else {
+      expression.value += ')';
+    }
+    isNextOpenParenthesis.value = !isNextOpenParenthesis.value;
   }
 
   void appendDecimal() {

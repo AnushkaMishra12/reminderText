@@ -43,12 +43,12 @@ class CreateGroceryListScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Flexible(
               child: Obx(() {
-                if (controller.items.isNotEmpty) {
+                if (controller.items.isNotEmpty){
                   return SingleChildScrollView(
                     child: Wrap(
                       spacing: 8.0,
                       runSpacing: 4.0,
-                      children: controller.items.map((item) {
+                      children: controller.items.map((item){
                         return Chip(
                           label: Text(item),
                           deleteIcon: const Icon(Icons.close),
@@ -66,6 +66,7 @@ class CreateGroceryListScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const TextField(
+
               decoration: InputDecoration(
                 labelText: 'Add Category',
                 suffixIcon: Icon(Icons.circle, color: Colors.red),

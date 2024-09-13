@@ -22,7 +22,7 @@ class CalculatorDatabaseHelper {
         );
       },
       version: 2,
-      onUpgrade: (db, oldVersion, newVersion) {
+      onUpgrade: (db, oldVersion, newVersion){
         if (oldVersion < 2) {
           db.execute(
             'ALTER TABLE calculator_history ADD COLUMN result TEXT',
@@ -45,6 +45,7 @@ class CalculatorDatabaseHelper {
     final db = await database;
     return await db.query('calculator_history');
   }
+
   Future<void> clearAllHistory() async {
     final db = await database;
     await db.delete('calculator_history');
