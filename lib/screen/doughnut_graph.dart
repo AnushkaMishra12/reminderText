@@ -36,7 +36,7 @@ class _DoughnutGraphState extends State<DoughnutGraph> {
     final db = await dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('habits');
     return List.generate(maps.length, (i) {
-      return Habit.fromMap(maps[i]);
+    return Habit.fromMap(maps[i]);
     });
   }
 

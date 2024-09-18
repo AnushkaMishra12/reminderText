@@ -3,18 +3,18 @@ import 'package:get/get.dart';
 
 class DoughnutGraphController extends GetxController {
   var categoryData = <String, Map<String, double>>{
-    "Water": {"Bad": 2, "Good": 18, "Excellent": 50, "Average": 30, "Value": 50.0},
-    "Sleep": {"Bad": 10, "Good": 30, "Excellent": 40, "Average": 20, "Value": 30.0},
-    "Walk": {"Bad": 5, "Good": 45, "Excellent": 30, "Average": 20, "Value": 70.0},
-    "Study": {"Bad": 15, "Good": 25, "Excellent": 40, "Average": 20, "Value": 40.0},
-    "Bills": {"Bad": 20, "Good": 20, "Excellent": 50, "Average": 10, "Value": 20.0},
+    "Water": {"Bad": 2.0, "Good": 18.0, "Excellent": 50.0, "Average": 30.0, "Value": 50.0},
+    "Sleep": {"Bad": 10.0, "Good": 30.0, "Excellent": 40.0, "Average": 20.0, "Value": 30.0},
+    "Walk": {"Bad": 5.0, "Good": 45.0, "Excellent": 30.0, "Average": 20.0, "Value": 70.0},
+    "Study": {"Bad": 15.0, "Good": 25.0, "Excellent": 40.0, "Average": 20.0, "Value": 40.0},
+    "Bills": {"Bad": 20.0, "Good": 20.0, "Excellent": 50.0, "Average": 10.0, "Value": 20.0},
   }.obs;
+
+  var selectedCategories = <String>{}.obs;
 
   void updateAllCategories(Map<String, Map<String, double>> updatedData) {
     if (kDebugMode) {
-      if (kDebugMode) {
-        print("Updating all categories...");
-      }
+      print("Updating all categories...");
     }
     if (kDebugMode) {
       print("Before update: ${categoryData.value}");
@@ -30,10 +30,10 @@ class DoughnutGraphController extends GetxController {
       print("Updating category: $category with value: $value");
     }
     Map<String, double> updatedValues = {
-      "Bad": (value <= 20) ? value : 0,
-      "Good": (value > 20 && value <= 40) ? value : 0,
-      "Average": (value > 40 && value <= 80) ? value : 0,
-      "Excellent": (value > 80) ? value : 0,
+      "Bad": (value <= 20) ? value : 0.0,
+      "Good": (value > 20 && value <= 40) ? value : 0.0,
+      "Average": (value > 40 && value <= 80) ? value : 0.0,
+      "Excellent": (value > 80) ? value : 0.0,
       "Value": value,
     };
 
@@ -46,4 +46,17 @@ class DoughnutGraphController extends GetxController {
     }
   }
 
+  void addSelectedCategory(String category) {
+    selectedCategories.add(category);
+  }
+
+  void removeSelectedCategory(String category) {
+    selectedCategories.remove(category);
+  }
+
+  Map<String, Map<String, double>> getFilteredCategoryData() {
+    return Map.fromEntries(
+        categoryData.entries.where((entry) => selectedCategories.contains(entry.key))
+    );
+  }
 }

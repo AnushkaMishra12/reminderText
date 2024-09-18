@@ -26,17 +26,14 @@ class CalculatorController extends GetxController {
 
         RegExp regExp = RegExp(r'[\+\-\*\/]');
         Iterable<RegExpMatch> matches = regExp.allMatches(currentExpression);
-
         if (matches.isNotEmpty) {
           RegExpMatch lastMatch = matches.last;
-
           String leftSide = currentExpression.substring(0, lastMatch.start);
           String operator = currentExpression[lastMatch.start];
           String rightSide = currentExpression.substring(lastMatch.start + 1);
           double leftValue = double.tryParse(leftSide) ?? 0;
           double rightValue = double.tryParse(rightSide) ?? 0;
           double percentageResult = (leftValue * rightValue) / 100;
-
 
           expression.value = leftValue.toString() + operator + percentageResult.toString();
         } else {

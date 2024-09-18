@@ -8,7 +8,7 @@ class CalculatorScreen extends StatelessWidget {
   final CalculatorController _controller = Get.put(CalculatorController());
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -38,9 +38,7 @@ class CalculatorScreen extends StatelessWidget {
                       textAlign: TextAlign.end,
                       controller: TextEditingController(text: _controller.expression.value),
                       decoration: const InputDecoration(
-
                       border: InputBorder.none,
-
                         hintText: 'Enter expression',
                        hintStyle: TextStyle(fontSize: 24)
                       ),
@@ -55,13 +53,14 @@ class CalculatorScreen extends StatelessWidget {
                        child: Text(
                         _controller.result.value,
                         style: const TextStyle(fontSize: 34,color: Colors.red,fontWeight: FontWeight.bold),
-                                         ),
+                       ),
                      ),
                    ),
                 ],
               ),
-            )),
-            const SizedBox(height: 30,),
+            )
+            ),
+            const SizedBox(height: 30),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -115,7 +114,6 @@ class CalculatorScreen extends StatelessWidget {
                       return _buildButton('del', _controller.deleteLast, isOperator: true);
                     case 19:
                       return _buildButton('=', _controller.calculate, isOperator: true); // Equals button
-
                     default:
                       return Container();
                   }

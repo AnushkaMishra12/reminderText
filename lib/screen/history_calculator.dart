@@ -10,7 +10,6 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   late Future<List<Map<String, dynamic>>> _historyFuture;
-
   final CalculatorDatabaseHelper _dbHelper = CalculatorDatabaseHelper();
 
   @override

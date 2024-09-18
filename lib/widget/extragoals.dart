@@ -145,9 +145,11 @@ class _ExtraGoalsDropdownState extends State<ExtraGoalsDropdown> {
   Widget build(BuildContext context) {
     return CustomDropdown<String>(
       items: const [
-        '30 Days Walk Challenge',
-        'Games per Day (One Hour)',
-        '8 Glasses of Water per Day',
+        'Water',
+        'Bills',
+        'Study',
+        'Sleep',
+        'Wak=lk'
       ],
       selectedItem: _selectedGoal,
       hintText: widget.hintText,
